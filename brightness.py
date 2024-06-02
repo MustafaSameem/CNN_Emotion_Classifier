@@ -1,31 +1,34 @@
 import os
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageStat
 
-def increase_brightness(input_directory, output_directory, brightness_factor):
-    # check if directory exists
-    if not os.path.exists(output_directory):
-        os.makedirs(output_directory)
+def is_image_too_dark(image, threshold=120):
+    
+    stat = ImageStat.Stat(image)
+    brightness = stat.mean[0]
+    return brightness < threshold
 
+def increase_brightness_if_dark(input_directory, brightness_factor=1.5, brightness_threshold=120):
     # go through all images
     for filename in os.listdir(input_directory):
         if filename.endswith(".jpg") or filename.endswith(".png"):
             # open image 
             img = Image.open(os.path.join(input_directory, filename))
 
-            # enhance the brightness
-            enhancer = ImageEnhance.Brightness(img)
-            img_enhanced = enhancer.enhance(brightness_factor)
+            # check if the image is too dark
+            if is_image_too_dark(img, brightness_threshold):
+                # increase the brightness
+                enhancer = ImageEnhance.Brightness(img)
+                img = enhancer.enhance(brightness_factor)
 
-            # save image
-            output_path = os.path.join(output_directory, filename)
-            img_enhanced.save(output_path)
+                # save the image in the same directory
+                img.save(os.path.join(input_directory, filename))
 
-    print("Brightness increased for all images in the directory.")
+    print("Done!")
 
-#change directory for each Class
-input_dir = './images/Angry'
-output_dir = './imageClasses/Angry'
-brightness = 1.5  
+# change directory depending on the emotion
+input_dir = './imageSamples/Angry'
+brightness_factor = 1.5  
+brightness_threshold = 120  # threshold for detecting dark images
 
 
-increase_brightness(input_dir, output_dir, brightness)
+increase_brightness_if_dark(input_dir, brightness_factor, brightness_threshold)
