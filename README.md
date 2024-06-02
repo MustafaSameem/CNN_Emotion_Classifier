@@ -24,4 +24,4 @@ In order to execute `brightness.py`, simply `cd` into the directory containing t
 
 ## Executing Data Visualization
 
-- In order to visualize the data using `distribution.py`, `pixel.py`, and `sample.py`, simply `cd` into the directory containing the respective file and run the file code. Relative paths are included to ensure cross-platform runnability.
+In order to visualize the data using `distribution.py`, `pixel.py`, and `sample.py`, simply `cd` into the directory containing the respective file and run the file code. Relative paths are included to ensure cross-platform runnability.
