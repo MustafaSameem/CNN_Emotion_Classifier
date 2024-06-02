@@ -17,6 +17,7 @@ This folder contains around 25 sample pictures of each class.
 - **distribution.py**: Generates the class distribution chart.
 - **pixel.py**: Generates the pixel intensity distribution chart.
 - **sample.py**: Generates sample images along with their histogram charts.
+- **brightness.py**: Increases brightness for darker images.
 
 ## Executing Data Cleaning
 
