@@ -26,7 +26,7 @@ def increase_brightness_if_dark(input_directory, brightness_factor=1.5, brightne
     print("Done!")
 
 # change directory depending on the emotion
-input_dir = './imageSamples/Angry'
+input_dir = './imageClasses/Angry'
 brightness_factor = 1.5  
 brightness_threshold = 120  # threshold for detecting dark images
 
