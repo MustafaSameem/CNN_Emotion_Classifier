@@ -6,7 +6,7 @@ current_directory = os.getcwd()
 print(f"Current working directory: {current_directory}")
 
 #Define images path
-images_folder = os.path.join(current_directory, 'imageSamples')
+images_folder = os.path.join(current_directory, '../imageSamples')
 
 #Image Classes
 classes = ['Angry', 'Engaged', 'Happy', 'Neutral']
