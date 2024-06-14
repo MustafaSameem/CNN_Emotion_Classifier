@@ -4,10 +4,13 @@ import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, random_split
 from PIL import Image
+import numpy as np
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 data_dir = '../imageClasses'
 model_path = 'best_model.pth'
 num_classes = 4
+
 
 transform = transforms.Compose([
     transforms.Resize((32, 32)),
@@ -52,9 +55,12 @@ class CNN(nn.Module):
         return x
 
 def evaluate_on_dataset():
+    all_labels = []
+    all_preds = []
     model = CNN()
     model.load_state_dict(torch.load(model_path))
     model.eval()
+    
 
     dataset = ImageFolder(root=data_dir, transform=transform)
     train_size = int(0.7 * len(dataset))
@@ -70,11 +76,26 @@ def evaluate_on_dataset():
     with torch.no_grad():
         for images, labels in test_loader:
             outputs = model(images)
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+            _, preds = torch.max(outputs.data, 1)
+            all_labels.extend(labels.cpu().numpy())
+            all_preds.extend(preds.cpu().numpy())
+            
+    # Convert lists to numpy arrays for compatibility with scikit-learn
+    all_labels = np.array(all_labels)
+    all_preds = np.array(all_preds)
+
+    # Calculate metrics
+    accuracy = accuracy_score(all_labels, all_preds)
+    precision = precision_score(all_labels, all_preds, average='weighted')
+    recall = recall_score(all_labels, all_preds, average='weighted')
+    f1 = f1_score(all_labels, all_preds, average='weighted')
+
+    print(f'Accuracy: {accuracy:.4f}')
+    print(f'Precision: {precision:.4f}')
+    print(f'Recall: {recall:.4f}')
+    print(f'F1 Score: {f1:.4f}')
     
-    print(f'Test Accuracy of the model on the test images: {100 * correct / total} %')
+    #print(f'Test Accuracy of the model on the test images: {100 * correct / total} %')
 
 def evaluate_on_single_image(image_path):
     model = CNN()
