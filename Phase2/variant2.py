@@ -31,29 +31,32 @@ train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_worker
 val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=2)
 test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=2)
 
-class Variant1CNN(nn.Module):
+class Variant2CNN(nn.Module):
     def __init__(self):
-        super(Variant1CNN, self).__init__()
+        super(Variant2CNN, self).__init__()
         self.conv_layer = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, padding=2),  # Changed kernel size
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1),
             nn.BatchNorm2d(32),
             nn.LeakyReLU(inplace=True),
-            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, padding=2),  # Changed kernel size
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1),
             nn.BatchNorm2d(32),
             nn.LeakyReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, padding=2),  # Changed kernel size
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64),
             nn.LeakyReLU(inplace=True),
-            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=5, padding=2),  # Changed kernel size
+            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64),
+            nn.LeakyReLU(inplace=True),
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=1),  # Added layer
+            nn.BatchNorm2d(128),
             nn.LeakyReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
         )
 
         self.fc_layer = nn.Sequential(
             nn.Dropout(p=0.1),
-            nn.Linear(8 * 8 * 64, 1000),
+            nn.Linear(8 * 8 * 128, 1000),  # Adjusted input size
             nn.ReLU(inplace=True),
             nn.Linear(1000, 512),
             nn.ReLU(inplace=True),
@@ -67,7 +70,7 @@ class Variant1CNN(nn.Module):
         x = self.fc_layer(x)
         return x
 
-model = Variant1CNN()
+model = Variant2CNN()
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -75,7 +78,7 @@ def train():
     total_step = len(train_loader)
     best_val_loss = float('inf')
     epochs_no_improve = 0
-    best_model_path = 'variant1_best_model.pth'
+    best_model_path = 'variant2_best_model.pth'
 
     for epoch in range(num_epochs):
         model.train()
