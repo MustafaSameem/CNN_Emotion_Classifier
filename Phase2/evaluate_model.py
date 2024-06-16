@@ -4,6 +4,18 @@ import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, random_split
 from PIL import Image
+import numpy as np
+import random
+
+#Seed to reproduce consistent results
+seed = 40
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+np.random.seed(seed)
+random.seed(seed)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 data_dir = '../imageClasses'
 model_path = 'best_model.pth'

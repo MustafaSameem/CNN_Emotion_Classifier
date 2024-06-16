@@ -1,13 +1,25 @@
-from torch.utils.data import DataLoader, random_split
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
+from torch.utils.data import DataLoader, random_split
+import numpy as np
+import random
+
+#Seed to reproduce consistent results
+seed = 40
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+np.random.seed(seed)
+random.seed(seed)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 num_epochs = 10
 num_classes = 4
 learning_rate = 0.001
-patience = 3  # Number of epochs to wait for improvement before stopping
+patience = 3  
 
 data_dir = '../imageClasses'
 
@@ -19,7 +31,7 @@ transform = transforms.Compose([
 
 dataset = ImageFolder(root=data_dir, transform=transform)
 
-# Split dataset into train, val, and test sets
+#Split dataset into train, val, and test sets (70/15/15)
 train_size = int(0.7 * len(dataset))
 val_size = int(0.15 * len(dataset))
 test_size = len(dataset) - train_size - val_size
