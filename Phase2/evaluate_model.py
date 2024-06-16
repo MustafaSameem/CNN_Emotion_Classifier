@@ -1,13 +1,15 @@
 import torch
 import torch.nn as nn
-import torchvision.transforms as transforms
+from torchvision import transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, random_split
 from PIL import Image
 import numpy as np
 import random
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
 
-#Seed to reproduce consistent results
+# Seed to reproduce consistent results
 seed = 40
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
@@ -79,32 +81,41 @@ def evaluate_on_dataset():
 
     correct = 0
     total = 0
+    all_labels = []
+    all_predictions = []
     with torch.no_grad():
         for images, labels in test_loader:
             outputs = model(images)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
+            all_labels.extend(labels.numpy())
+            all_predictions.extend(predicted.numpy())
     
     print(f'Test Accuracy of the model on the test images: {100 * correct / total} %')
 
-def evaluate_on_single_image(image_path):
-    model = CNN()
-    model.load_state_dict(torch.load(model_path))
-    model.eval()
+    # Calculate confusion matrix
+    cm = confusion_matrix(all_labels, all_predictions)
 
-    image = Image.open(image_path)
-    image = transform(image).unsqueeze(0)
+    # Plot confusion matrix
+    plt.figure(figsize=(8, 6))
+    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title('Confusion Matrix')
+    plt.colorbar()
+    tick_marks = np.arange(num_classes)
+    plt.xticks(tick_marks, ['Angry', 'Engaged', 'Happy', 'Neutral'], rotation=45)
+    plt.yticks(tick_marks, ['Angry', 'Engaged', 'Happy', 'Neutral'])
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
 
-    with torch.no_grad():
-        outputs = model(image)
-        _, predicted = torch.max(outputs.data, 1)
-    
-    classes = ['Angry', 'Engaged', 'Happy', 'Neutral']
-    print(f'The predicted class for the image is: {classes[predicted.item()]}')
+    for i in range(num_classes):
+        for j in range(num_classes):
+            plt.text(j, i, str(cm[i, j]), horizontalalignment='center', color='black')
+
+    plt.tight_layout()
+    plt.show()
 
 if __name__ == '__main__':
-    # Evaluate on the entire dataset
     evaluate_on_dataset()
 
     # Evaluate on a single image
