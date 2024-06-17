@@ -27,4 +27,20 @@ In order to execute `brightness.py`, simply `cd` into the directory containing t
 
 In order to visualize the data using `distribution.py`, `pixel.py`, and `sample.py`, simply `cd` into the directory containing the respective file and run the file code. Relative paths are included to ensure cross-platform runnability.
 
-https://github.com/MustafaSameem/COMP472
+## Executing Phase II
+
+1. Recreate the conda environment using the provided `environment.yml` file.
+
+2. Navigate to the `Phase2` directory.
+
+3. Run the following commands:
+   - `python cnn.py` to run the main model.
+   - `python cnn_variant1.py` to run the variant1 model.
+   - `python cnn_variant2.py` to run the variant2 model.
+
+To evaluate the models, execute the following commands:
+- `python evaluate_model.py` for the main CNN model.
+- `python evaluate_variant1.py` for the variant1 model.
+- `python evaluate_variant2.py` for the variant2 model.
+
+[GitHub Repository](https://github.com/MustafaSameem/COMP472)
