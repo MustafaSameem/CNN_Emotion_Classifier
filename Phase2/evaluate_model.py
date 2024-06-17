@@ -8,6 +8,7 @@ import numpy as np
 import random
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
+from sklearn.metrics import precision_recall_fscore_support
 
 # Seed to reproduce consistent results
 seed = 40
@@ -114,6 +115,16 @@ def evaluate_on_dataset():
 
     plt.tight_layout()
     plt.show()
+
+    # Calculate and print precision, recall, and F1-score
+    precision, recall, fscore, _ = precision_recall_fscore_support(all_labels, all_predictions, average='macro')
+    print(f'Macro-averaged Precision: {precision:.4f}')
+    print(f'Macro-averaged Recall: {recall:.4f}')
+    print(f'Macro-averaged F1-score: {fscore:.4f}')
+    precision, recall, fscore, _ = precision_recall_fscore_support(all_labels, all_predictions, average='micro')
+    print(f'Micro-averaged Precision: {precision:.4f}')
+    print(f'Micro-averaged Recall: {recall:.4f}')
+    print(f'Micro-averaged F1-score: {fscore:.4f}')
 
 if __name__ == '__main__':
     evaluate_on_dataset()

@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader, random_split
 from PIL import Image
 import numpy as np
 import random
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, precision_recall_fscore_support
 import matplotlib.pyplot as plt
 from cnn_variant2 import CNNVariant2  
 
@@ -71,13 +71,23 @@ def evaluate_model():
     for i in range(num_classes):
         for j in range(num_classes):
             plt.text(j, i, str(cm[i, j]), horizontalalignment='center', color='black')
-            
+
     plt.tight_layout()
     plt.show()
 
     #Calculate and print accuracy
     accuracy = np.trace(cm) / float(np.sum(cm))
     print(f'Accuracy of the model on the test images: {accuracy * 100:.2f}%')
+
+    # Calculate and print precision, recall, and F1-score
+    precision, recall, fscore, _ = precision_recall_fscore_support(all_labels, all_predictions, average='macro')
+    print(f'Macro-averaged Precision: {precision:.4f}')
+    print(f'Macro-averaged Recall: {recall:.4f}')
+    print(f'Macro-averaged F1-score: {fscore:.4f}')
+    precision, recall, fscore, _ = precision_recall_fscore_support(all_labels, all_predictions, average='micro')
+    print(f'Micro-averaged Precision: {precision:.4f}')
+    print(f'Micro-averaged Recall: {recall:.4f}')
+    print(f'Micro-averaged F1-score: {fscore:.4f}')
 
 if __name__ == '__main__':
     evaluate_model()
