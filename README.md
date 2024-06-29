@@ -43,4 +43,20 @@ To evaluate the models, execute the following commands:
 - `python evaluate_variant1.py` for the variant1 model.
 - `python evaluate_variant2.py` for the variant2 model.
 
+
+## Executing Phase III
+
+1. Recreate the conda environment using the provided `environment.yml` file.
+
+2. Navigate to the `Phase3` directory.
+
+3. Run the following commands:
+   - `python Kfold.py` to run the kfold model.
+   - `python cnn_male.py` to run the male group model.
+   - `python cnn_female.py` to run the female group model.
+
+To evaluate the models, execute the following commands:
+- `python evaluate_model_male.py` for the male model measures.
+- `python evaluate_model_female.py` for the female model measures.
+
 [GitHub Repository](https://github.com/MustafaSameem/COMP472)
